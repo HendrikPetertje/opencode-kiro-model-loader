@@ -66,6 +66,10 @@ Run `/models` to see the Kiro models.
 
 The list is read once when the service starts. After Kiro adds or removes models, run `opencode service restart`.
 
+## Notifications
+
+When `kiro-cli` is missing, not logged in, or returns no models, the TUI shows a warning toast once per launch. To silence it on a machine without Kiro, set `KIRO_NOTIFY=0` in the environment OpenCode starts with (for example, in your shell profile).
+
 ## Troubleshooting
 
 - Run `kiro-cli chat --list-models` in a terminal. If that fails, sign in with `kiro-cli` first.

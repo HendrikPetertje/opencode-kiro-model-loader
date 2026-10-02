@@ -8,6 +8,7 @@
 import { Model, Plugin, Provider } from "@opencode/plugin";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { KiroStatus, type KiroStatusResult } from "./rpc.ts";
 
 const execFileAsync = promisify(execFile);
 
@@ -56,23 +57,45 @@ function toModel(entry: KiroModel): Model.Info {
   };
 }
 
-async function listModels(): Promise<Model.Info[]> {
+type ExecError = Error & { code?: string | number; stderr?: string; killed?: boolean };
+
+function describeFailure(error: ExecError): string {
+  if (error.code === "ENOENT") return "kiro-cli was not found on the PATH of the OpenCode service.";
+  if (error.killed) return "kiro-cli timed out while listing models.";
+  const detail = `${error.stderr ?? ""} ${error.message}`;
+  if (/log ?in|sign ?in|auth|unauthori[sz]ed|expired|credential/i.test(detail)) {
+    return "kiro-cli is not logged in. Run `kiro-cli login`, then `opencode service restart`.";
+  }
+  return `kiro-cli failed: ${error.message.split("\n")[0]}`;
+}
+
+async function listModels(): Promise<{ models: Model.Info[]; status: KiroStatusResult }> {
   try {
     const { stdout } = await execFileAsync("kiro-cli", ["chat", "--list-models"], {
       timeout: 30_000,
       env: { ...process.env, NO_COLOR: "1" },
     });
-    return parseModels(stdout).map(toModel);
+    const models = parseModels(stdout).map(toModel);
+    if (models.length === 0) {
+      return { models, status: { ok: false, message: "kiro-cli returned no models. Is it logged in?" } };
+    }
+    return { models, status: { ok: true } };
   } catch (error) {
-    console.error("[opencode-kiro-models] kiro-cli chat --list-models failed:", (error as Error).message);
-    return [];
+    const message = describeFailure(error as ExecError);
+    console.error("[opencode-kiro-models]", message);
+    return { models: [], status: { ok: false, message } };
   }
 }
 
 export default Plugin.define({
   id: "opencode-kiro-models",
   async setup(ctx) {
-    const models = await listModels();
+    const result = listModels();
+    await ctx.rpc.register(KiroStatus, {
+      status: async () => (await result).status,
+    });
+
+    const { models } = await result;
     if (models.length === 0) return;
 
     await ctx.provider.transform((editor) => {

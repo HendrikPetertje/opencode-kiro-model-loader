@@ -2,5 +2,8 @@
   "name": "opencode-kiro-models",
   "private": true,
   "type": "module",
-  "exports": "./index.ts"
+  "exports": {
+    ".": "./index.ts",
+    "./tui": "./tui.ts"
+  }
 }
