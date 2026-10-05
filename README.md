@@ -35,12 +35,14 @@ It works together with the [`opencode-kiro`](https://github.com/NachoFLizaur/ope
    }
    ```
 
-3. Make sure `@opencode/plugin` is installed in your OpenCode config directory. The plugin resolves it from there:
+3. Install the plugin's dependencies. `@opencode/plugin` is declared as a peer dependency, so `npm install` fetches it:
 
    ```sh
-   cd ~/.config/opencode
-   npm install -S @opencode/plugin
+   cd ~/.config/opencode/plugins/opencode-kiro-model-loader   # or wherever you cloned it
+   npm install
    ```
+
+   Inside `~/.config/opencode` the package also resolves from the parent `node_modules`, but this step is required if you keep the plugin elsewhere.
 
 4. Remove any `kiro` entry under `providers` in `opencode.jsonc`. Hand-written models can conflict with the discovered ones.
 
