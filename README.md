@@ -31,7 +31,7 @@ It works together with the [`opencode-kiro`](https://github.com/NachoFLizaur/ope
 
    ```jsonc
    {
-     "plugins": ["opencode-kiro@0.5.0-beta.5", "/path/to/opencode-kiro-models"]
+     "plugins": ["opencode-kiro@0.5.0-beta.7", "/path/to/opencode-kiro-models"]
    }
    ```
 
