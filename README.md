@@ -15,11 +15,11 @@ It works together with the [`opencode-kiro`](https://github.com/NachoFLizaur/ope
 
    ```jsonc
    {
-     "plugins": ["opencode-kiro@0.5.0-beta.5"]
+     "plugins": ["opencode-kiro@0.5.0-beta.7"]
    }
    ```
 
-   `0.5.0-beta.5` is the newest release. The `latest` tag on npm is still `0.4.0`, so pin the beta explicitly.
+   `0.5.0-beta.7` is the newest release. The `latest` tag on npm is still `0.4.0`, so pin the beta explicitly.
 
 2. Clone this repository into your global OpenCode plugins directory:
 
