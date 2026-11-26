@@ -1,3 +1,6 @@
+**This plugin is not needed anymore, opencode-kiro will now detect and load
+models automatically and also add reasoning effort and the like automatically.
+so you don't need this plugin anymore**
 # opencode-kiro-models
 
 OpenCode V2 plugin that keeps the model list of the `kiro` provider current. At startup it runs `kiro-cli chat --list-models` and registers every model it finds, so you no longer maintain a models.dev snapshot or a hand-written list.
